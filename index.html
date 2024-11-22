@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise and Sunset Times</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sunrise and Sunset Times</h1>
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude" placeholder="Enter Latitude" />
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude" placeholder="Enter Longitude" />
+    <button onclick="getSunTimes()">Get Times</button>
+
+    <div id="result"></div>
+
+    <script>
+        function getSunTimes() {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+            
+            if(lat && lng) {
+                const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const sunrise = new Date(data.results.sunrise);
+                        const sunset = new Date(data.results.sunset);
+                        
+                        document.getElementById('result').innerHTML = `
+                            <h2>Sunrise and Sunset Times</h2>
+                            <p><strong>Sunrise:</strong> ${sunrise.toLocaleString()}</p>
+                            <p><strong>Sunset:</strong> ${sunset.toLocaleString()}</p>
+                        `;
+                    })
+                    .catch(error => {
+                        document.getElementById('result').innerHTML = 'Error fetching data.';
+                    });
+            } else {
+                alert('Please enter both latitude and longitude.');
+            }
+        }
+    </script>
+
+</body>
+</html>
